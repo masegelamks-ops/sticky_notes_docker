@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}My Board - Sticky Notes{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom CSS to transform Bootstrap cards into realistic sticky notes */
+    .sticky-note-card {
+        background-color: #fff799 !important; /* Pastel Yellow */
+        border: none !important;
+        border-bottom-right-radius: 20px !important; /* Creates a slight curl effect */
+        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    
+    /* Alternating slight rotations for realism */
+    .row > role:nth-child(even) .sticky-note-card { transform: rotate(1.5deg); }
+    .row > role:nth-child(odd) .sticky-note-card { transform: rotate(-1.5deg); }
+    
+    .sticky-note-card:hover {
+        transform: scale(1.04) rotate(0deg) !important;
+        box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6 fw-bold text-secondary">Your Workspace</h1>
+        <span class="badge bg-secondary fs-6">{{ notes|length }} Notes Total</span>
+    </div>
+    
+    <!-- Bootstrap Responsive Grid -->
+    <div class="row g-4">
+        {% for note in notes %}
+            <div role="gridcell" class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100 sticky-note-card">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark border-bottom pb-2">
+                            <a href="{% url 'sticky_notes:note_detail' note.id %}" class="text-decoration-none text-dark">
+                                {{ note.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted flex-grow-1">
+                            {{ note.content|truncatewords:20 }}
+                        </p>
+                        <div class="mt-3 pt-2 text-end text-muted small border-top" style="font-size: 0.75rem;">
+                            📅 {{ note.created_at|date:"d M Y" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <!-- Styled Empty State -->
+            <div class="col-12 text-center py-5">
+                <div class="card p-5 bg-white shadow-sm border-0">
+                    <h3 class="text-muted">Your corkboard is empty!</h3>
+                    <p class="text-secondary">Click the button above to stick your first note on the board.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

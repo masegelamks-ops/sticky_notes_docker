@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Edit Note{% else %}New Note{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        /* Targets the custom CSS classes you provided in forms.py */
+        .note-title-input, .note-content-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .note-content-input {
+            resize: vertical;
+        }
+        /* Custom layout logic specifically for your native color picker input */
+        input[type="color"] {
+            border: none;
+            width: 50px;
+            height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 0;
+            background: none;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+        .btn-save {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-save:hover {
+            background-color: #0056b3;
+        }
+        .cancel-link {
+            color: #666;
+            text-decoration: none;
+        }
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>{% if form.instance.pk %}Edit Note{% else %}Create New Note{% endif %}</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Title Field -->
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+        </div>
+        
+        <!-- Content Field -->
+        <div class="form-group">
+            <label for="{{ form.content.id_for_label }}">Content</label>
+            {{ form.content }}
+            {{ form.content.errors }}
+        </div>
+        
+        <!-- Color Picker Field -->
+        <div class="form-group">
+            <label for="{{ form.color.id_for_label }}">Note Color</label>
+            {{ form.color }}
+            {{ form.color.errors }}
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'notes:note_list' %}" class="cancel-link">Cancel</a>
+            <button type="submit" class="btn-save">Save Note</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
